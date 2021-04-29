@@ -1,8 +1,6 @@
 import discord
 import os
 from dotenv import load_dotenv
-import random
-import cassiopeia as cass
 
 
 # Load environment variables
@@ -13,7 +11,7 @@ LOL_API_KEY = os.getenv('LEAGUE_API')
 client = discord.Client()
 
 
-def decoder(string):
+def coder(string):
     dict = {'Q': '%', 'W': '^', 'E': '~', 'R': '|', 'T': '[',
             'Y': ']', 'U': '<', 'I': '>', 'O': '{', 'P': '}',
             'A': '@', 'S': '#', 'D': '&', 'F': '*', 'G': '-',
@@ -34,40 +32,32 @@ def decoder(string):
     message = ''
 
     for letter in string:
-        message = message + dict[letter]
+        if letter in dict:
+            message = message + dict[letter]
+        else:
+            message = message + 'x'
 
     return message
 
 
-# This overrides the value set in your configuration/settings.
-def league(sumname):
-    sumname = sumname[11:]
-    cass.set_riot_api_key(LOL_API_KEY)
-    cass.set_default_region("OCE")
-
-    summoner = cass.get_summoner(name=sumname)
-    message = ("This loser, {name} is a summoner on the {region} server.".format(name=summoner.name,
-                                                                                 region=summoner.region))
-    return message
-
-
-@client.event
+@ client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
 
 
-@client.event
+@ client.event
 async def on_message(message):
     if message.author == client.user:
         return
 
     if message.content.startswith('!encode'):
-        await message.channel.send('Your encoded message is:\n' + decoder(message.content))
+        await message.channel.send(message.author.name + ' has encoded the following message:\n' + coder(message.content))
+        await message.delete()
 
     if message.content.startswith('!decode'):
-        await message.channel.send('Your decoded message is:\n' + decoder(message.content))
+        await message.channel.send('Your decoded message is:\n' + coder(message.content))
 
-    if message.content.startswith('!lllsearch'):
-        await message.channel.send(league(message.content))
+    # if message.content.startswith('pls boob'):
+    #     await message.channel.send(message.author.name + ' is a dirty pervert!')
 
 client.run(DISCORD_TOKEN)
