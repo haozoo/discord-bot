@@ -17,7 +17,20 @@ my_region = 'oc1'
 
 
 def printplayer(ign):
-    player = watcher.summoner.by_name(my_region, ign)
+    # Try retrieve summoner data
+    try:
+        player = watcher.summoner.by_name(my_region, ign)
+    except ApiError as err:
+        if err.response.status_code == 429:
+            print('We should retry in {} seconds.'.format(
+                err.headers['Retry-After']))
+            print('this retry-after is handled by default by the RiotWatcher library')
+            print('future requests wait until the retry-after time passes')
+        elif err.response.status_code == 404:
+            return 'That summoner cannot be found.'
+        else:
+            raise
+
     msg = (
         f"{player['name']} is level {player['summonerLevel']}"
     )
@@ -25,7 +38,20 @@ def printplayer(ign):
 
 
 def printrank(ign, queuetype):
-    player = watcher.summoner.by_name(my_region, ign)
+    # Try retrieve summoner data
+    try:
+        player = watcher.summoner.by_name(my_region, ign)
+    except ApiError as err:
+        if err.response.status_code == 429:
+            print('We should retry in {} seconds.'.format(
+                err.headers['Retry-After']))
+            print('this retry-after is handled by default by the RiotWatcher library')
+            print('future requests wait until the retry-after time passes')
+        elif err.response.status_code == 404:
+            return 'That summoner cannot be found.'
+        else:
+            raise
+
     rankedstats = watcher.league.by_summoner(my_region, player['id'])
 
     msg = 'You either do not have a rank, or you have not used the right queue type, select from either `flex` or `solo`'
@@ -44,11 +70,35 @@ def printrank(ign, queuetype):
 
 
 def printlastmatch(ign):
+    # Try retrieve summoner data
     print('Retrieving player matches...')
-    player = watcher.summoner.by_name(my_region, ign)
+    try:
+        player = watcher.summoner.by_name(my_region, ign)
+    except ApiError as err:
+        if err.response.status_code == 429:
+            print('We should retry in {} seconds.'.format(
+                err.headers['Retry-After']))
+            print('this retry-after is handled by default by the RiotWatcher library')
+            print('future requests wait until the retry-after time passes')
+        elif err.response.status_code == 404:
+            return 'That summoner cannot be found.'
+        else:
+            raise
 
-    my_matches = watcher.match.matchlist_by_account(
-        my_region, player['accountId'])
+    # Try retrieve match history
+    try:
+        my_matches = watcher.match.matchlist_by_account(
+            my_region, player['accountId'])
+    except ApiError as err:
+        if err.response.status_code == 429:
+            print('We should retry in {} seconds.'.format(
+                err.headers['Retry-After']))
+            print('this retry-after is handled by default by the RiotWatcher library')
+            print('future requests wait until the retry-after time passes')
+        elif err.response.status_code == 404:
+            return 'Could not find any games for that summoner.'
+        else:
+            raise
 
     # Fetch last match detail
     last_match = my_matches['matches'][0]
