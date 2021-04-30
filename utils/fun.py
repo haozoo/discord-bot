@@ -15,7 +15,7 @@ def coder(string):
             ',': '1', '.': '2', '!': '3', '?': '4',
             ' ': '  '}
 
-    string = string.split(' ', 1)[1].upper()
+    string = string.upper()
     message = ''
 
     for letter in string:

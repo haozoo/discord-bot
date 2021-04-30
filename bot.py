@@ -19,8 +19,8 @@ async def checklevel(ctx, ign):
 
 
 @bot.command()
-async def checkrank(ctx, ign):
-    await ctx.send(riot.printrank(ign))
+async def checkrank(ctx, ign, queuetype):
+    await ctx.send(riot.printrank(ign, queuetype))
 
 
 @bot.command()

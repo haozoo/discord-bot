@@ -24,18 +24,29 @@ def printplayer(ign):
     return msg
 
 
-def printrank(ign):
+def printrank(ign, queuetype):
     player = watcher.summoner.by_name(my_region, ign)
     rankedstats = watcher.league.by_summoner(my_region, player['id'])
-    msg = (
-        f"{rankedstats[1]['summonerName']} is hardstuck {rankedstats[1]['tier']} {rankedstats[1]['rank']} in soloqueue HAH!"
-    )
+
+    msg = 'You either do not have a rank, or you have not used the right queue type, select from either `flex` or `solo`'
+
+    for i in range(len(rankedstats)):
+        if (queuetype == 'flex' and rankedstats[i]['queueType'] == 'RANKED_FLEX_SR'):
+            msg = (
+                f"{rankedstats[i]['summonerName']} is hardstuck {rankedstats[i]['tier']} {rankedstats[i]['rank']} in flex queue!"
+            )
+        elif (queuetype == 'solo' and rankedstats[i]['queueType'] == 'RANKED_SOLO_5x5'):
+            msg = (
+                f"{rankedstats[i]['summonerName']} is hardstuck {rankedstats[i]['tier']} {rankedstats[i]['rank']} in solo queue!"
+            )
+
     return msg
 
 
 def printlastmatch(ign):
     print('Retrieving player matches...')
     player = watcher.summoner.by_name(my_region, ign)
+
     my_matches = watcher.match.matchlist_by_account(
         my_region, player['accountId'])
 
@@ -79,7 +90,7 @@ def printlastmatch(ign):
         '%A, %B %-d', time.localtime(match_detail['gameCreation']))
 
     data = '```' + str(pd.DataFrame(participants)) + '```'
-    msg = f"{ign} **{'won' if hasWon else 'lost'}** his last game on {datetime}.\nHere are the details:\n{data}"
+    msg = f"{ign} **{'won' if hasWon else 'lost'}** their last game on {datetime}.\nHere are the details:\n{data}"
 
     return msg
 
