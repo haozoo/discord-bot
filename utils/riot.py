@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import time
+import discord
 
 from dotenv import load_dotenv
 from riotwatcher import LolWatcher, ApiError
@@ -33,28 +34,27 @@ def printrank(ign):
 
 
 def printlastmatch(ign):
+    print('Retrieving player matches...')
     player = watcher.summoner.by_name(my_region, ign)
     my_matches = watcher.match.matchlist_by_account(
         my_region, player['accountId'])
 
-    # fetch last match detail
+    # Fetch last match detail
     last_match = my_matches['matches'][0]
     match_detail = watcher.match.by_id(my_region, last_match['gameId'])
 
-    # # check league's latest version
-    # latest = watcher.data_dragon.versions_for_region(my_region)[
-    #     'n']['champion']
-
     # Lets get some champions static information (11.9.1 is champion version)
+    print('Retrieving static data...')
     static_champ_list = watcher.data_dragon.champions('11.9.1', False, 'en_US')
 
-    # champ static list data to dict for looking up
+    # Champ static list data to dict for looking up
     champ_dict = {}
     for key in static_champ_list['data']:
         row = static_champ_list['data'][key]
         champ_dict[row['key']] = row['id']
 
-    # Create an array of dict from match_detail
+    # Processing data into 2D array
+    print('Processing Data...')
     participants = []
     hasWon = 0
     for row in match_detail['participants']:
@@ -71,18 +71,17 @@ def printlastmatch(ign):
         participants_row['Damage Dealt'] = row['stats']['totalDamageDealt']
         participants_row['Total Gold'] = row['stats']['goldEarned']
         participants_row['CS'] = row['stats']['totalMinionsKilled']
-        # participants_row['item0'] = row['stats']['item0']
-        # participants_row['item1'] = row['stats']['item1']
         participants.append(participants_row)
+    print('... SUCCESS!\n')
 
-    # Create Message
+    # Create message
     datetime = time.strftime(
-        '%A, %B %-d, %Y %H:%M:%S', time.localtime(match_detail['gameCreation']))
-    data = '```' + str(pd.DataFrame(participants)) + '```'
+        '%A, %B %-d', time.localtime(match_detail['gameCreation']))
 
-    msg = f"{ign} {'won' if hasWon else 'lost'} his last game on {datetime}.\nHere are the details:\n{data}"
+    data = '```' + str(pd.DataFrame(participants)) + '```'
+    msg = f"{ign} **{'won' if hasWon else 'lost'}** his last game on {datetime}.\nHere are the details:\n{data}"
 
     return msg
 
 
-print(printlastmatch('TheHotDogThing'))
+# print(printlastmatch('TheHotDogThing'))

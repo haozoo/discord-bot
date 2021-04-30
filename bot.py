@@ -1,72 +1,54 @@
 import discord
 import os
-import riots
+from utils import fun
+from utils import riot
 from dotenv import load_dotenv
+from discord.ext import commands
 
 
 # Load environment variables
 load_dotenv()
 
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
-client = discord.Client()
+bot = commands.Bot(command_prefix='!')
 
 
-def coder(string):
-    dict = {'Q': '%', 'W': '^', 'E': '~', 'R': '|', 'T': '[',
-            'Y': ']', 'U': '<', 'I': '>', 'O': '{', 'P': '}',
-            'A': '@', 'S': '#', 'D': '&', 'F': '*', 'G': '-',
-            'H': '+', 'J': '=', 'K': '(', 'L': ')', 'Z': '_',
-            'X': '$', 'C': '"', 'V': '\'', 'B': ':', 'N': ';',
-            'M': '/',
-            '1': ',', '2': '.', '3': '!', '4': '?',
-            '%': 'Q', '^': 'W', '~': 'E', '|': 'R', '[': 'T',
-            ']': 'Y', '<': 'U', '>': 'I', '{': 'O', '}': 'P',
-            '@': 'A', '#': 'S', '&': 'D', '*': 'F', '-': 'G',
-            '+': 'H', '=': 'J', '(': 'K', ')': 'L', '_': 'Z',
-            '$': 'X', '"': 'C', '\'': 'V', ':': 'B', ';': 'N',
-            '/': 'M',
-            ',': '1', '.': '2', '!': '3', '?': '4',
-            ' ': '  '}
-
-    string = string[8:].upper()
-    message = ''
-
-    for letter in string:
-        if letter in dict:
-            message = message + dict[letter]
-        else:
-            message = message + 'x'
-
-    return message
+@bot.command()
+async def checklevel(ctx, ign):
+    await ctx.send(riot.printplayer(ign))
 
 
-@ client.event
+@bot.command()
+async def checkrank(ctx, ign):
+    await ctx.send(riot.printrank(ign))
+
+
+@bot.command()
+async def lastmatch(ctx, ign):
+    await ctx.send(riot.printlastmatch(ign))
+
+
+@bot.command()
+async def encode(ctx, text):
+    await ctx.message.channel.send(ctx.message.author.name + ' has encoded the following message:\n' + fun.coder(text))
+    await ctx.message.delete()
+
+
+@bot.command()
+async def decode(ctx, text):
+    await ctx.message.channel.send('Your decoded message is:\n' + fun.coder(text))
+
+
+@bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
+    print('We have logged in as {0.user}'.format(bot))
 
 
-@ client.event
+@bot.event
 async def on_message(message):
-    if message.author == client.user:
+    if message.author == bot.user:
         return
 
-    if message.content.startswith('!encode'):
-        await message.channel.send(message.author.name + ' has encoded the following message:\n' + coder(message.content))
-        await message.delete()
+    await bot.process_commands(message)
 
-    if message.content.startswith('!decode'):
-        await message.channel.send('Your decoded message is:\n' + coder(message.content))
-
-    if message.content.startswith('!checklevel'):
-        ign = message.content.split(' ', 1)[1]
-        await message.channel.send(riots.printplayer(ign))
-
-    if message.content.startswith('!checkrank'):
-        ign = message.content.split(' ', 1)[1]
-        await message.channel.send(riots.printrank(ign))
-
-    if message.content.startswith('!lastmatch'):
-        ign = message.content.split(' ', 1)[1]
-        await message.channel.send(f"Here are the details of {ign}\'s last match:\n" + riots.printlastmatch(ign))
-
-client.run(DISCORD_TOKEN)
+bot.run(DISCORD_TOKEN)
