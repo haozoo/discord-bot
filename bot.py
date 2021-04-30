@@ -26,7 +26,7 @@ async def checkrank(ctx, ign, queuetype):
 
 @bot.command()
 async def lastmatch(ctx, ign):
-    await ctx.send(riot.printlastmatch(ign))
+    await ctx.send(embed=riot.printlastmatch(ign))
 
 
 # Fun Commands

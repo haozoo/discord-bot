@@ -129,20 +129,32 @@ def printlastmatch(ign):
         participants_row['Level'] = row['stats']['champLevel']
         participants_row['KDA'] = str(row['stats']['kills']) + '/' + \
             str(row['stats']['deaths']) + '/' + str(row['stats']['assists'])
-        participants_row['Damage Dealt'] = row['stats']['totalDamageDealt']
-        participants_row['Total Gold'] = row['stats']['goldEarned']
+        # participants_row['Damage Dealt'] = row['stats']['totalDamageDealt']
+        # participants_row['Total Gold'] = row['stats']['goldEarned']
         participants_row['CS'] = row['stats']['totalMinionsKilled']
         participants.append(participants_row)
     print('... SUCCESS!\n')
 
-    # Create message
+    # Determine gamemode
+    if (match_detail['gameMode'] == 'CLASSIC'):
+        mode = 'Summoner\'s Rift'
+    elif (match_detail['gameMode'] == 'ARAM'):
+        mode = 'ARAM'
+    else:
+        mode = 'featured'
+
+    # Create embed
     datetime = time.strftime(
         '%A, %B %-d', time.localtime(match_detail['gameCreation']))
 
     data = '```' + str(pd.DataFrame(participants)) + '```'
-    msg = f"{ign} **{'won' if hasWon else 'lost'}** their last game on {datetime}.\nHere are the details:\n{data}"
+    msg = f"{player['name']} **{'won' if hasWon else 'lost'}** their last {mode} game on {datetime}.\n"
 
-    return msg
+    embedVar = discord.Embed(
+        title=f"{player['name']}'s last match", description=msg, color=0xffdb58)
+    embedVar.add_field(name="Match Data", value=data, inline=False)
+
+    return embedVar
 
 
 # print(printlastmatch('TheHotDogThing'))
