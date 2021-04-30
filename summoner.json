@@ -1,0 +1,32 @@
+[
+  {
+    "leagueId": "a8c1ab9f-a52d-4ddc-ab21-c240ca17b1f9",
+    "queueType": "RANKED_FLEX_SR",
+    "tier": "SILVER",
+    "rank": "I",
+    "summonerId": "aEEmIfesKL0qKKALSq2RtLOyGdMBmJwgGV0fvLMUEks7RQ",
+    "summonerName": "TheHotDogThing",
+    "leaguePoints": 45,
+    "wins": 59,
+    "losses": 53,
+    "veteran": False,
+    "inactive": False,
+    "freshBlood": False,
+    "hotStreak": True
+  },
+  {
+    "leagueId": "13ca7b7d-bad5-49f9-9d21-a465101d85c3",
+    "queueType": "RANKED_SOLO_5x5",
+    "tier": "PLATINUM",
+    "rank": "IV",
+    "summonerId": "aEEmIfesKL0qKKALSq2RtLOyGdMBmJwgGV0fvLMUEks7RQ",
+    "summonerName": "TheHotDogThing",
+    "leaguePoints": 3,
+    "wins": 108,
+    "losses": 101,
+    "veteran": False,
+    "inactive": False,
+    "freshBlood": False,
+    "hotStreak": False
+  }
+]

@@ -1,5 +1,6 @@
 import discord
 import os
+import riots
 from dotenv import load_dotenv
 
 
@@ -7,7 +8,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
-LOL_API_KEY = os.getenv('LEAGUE_API')
 client = discord.Client()
 
 
@@ -57,7 +57,16 @@ async def on_message(message):
     if message.content.startswith('!decode'):
         await message.channel.send('Your decoded message is:\n' + coder(message.content))
 
-    # if message.content.startswith('pls boob'):
-    #     await message.channel.send(message.author.name + ' is a dirty pervert!')
+    if message.content.startswith('!checklevel'):
+        ign = message.content.split(' ', 1)[1]
+        await message.channel.send(riots.printplayer(ign))
+
+    if message.content.startswith('!checkrank'):
+        ign = message.content.split(' ', 1)[1]
+        await message.channel.send(riots.printrank(ign))
+
+    if message.content.startswith('!lastmatch'):
+        ign = message.content.split(' ', 1)[1]
+        await message.channel.send(f"Here are the details of {ign}\'s last match:\n" + riots.printlastmatch(ign))
 
 client.run(DISCORD_TOKEN)
