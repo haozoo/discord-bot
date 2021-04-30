@@ -1,4 +1,1 @@
 discord.py
-pandas.py
-dotenv.py 
-riotwatcher.py 
