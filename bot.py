@@ -13,6 +13,7 @@ DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 bot = commands.Bot(command_prefix='!')
 
 
+# Riot API Commands
 @bot.command()
 async def checklevel(ctx, ign):
     await ctx.send(riot.printplayer(ign))
@@ -28,6 +29,7 @@ async def lastmatch(ctx, ign):
     await ctx.send(riot.printlastmatch(ign))
 
 
+# Fun Commands
 @bot.command()
 async def encode(ctx, text):
     await ctx.message.channel.send(ctx.message.author.name + ' has encoded the following message:\n' + fun.coder(text))
@@ -37,6 +39,11 @@ async def encode(ctx, text):
 @bot.command()
 async def decode(ctx, text):
     await ctx.message.channel.send('Your decoded message is:\n' + fun.coder(text))
+
+
+@bot.command()
+async def hotdog(ctx):
+    await ctx.message.channel.send(fun.hotdog())
 
 
 @bot.event
