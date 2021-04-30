@@ -1,1 +1,9 @@
 discord.py
+os.py
+pandas.py
+time.py
+discord.py
+dotenv.py 
+riotwatcher.py 
+random.py
+datetime.py
