@@ -2,7 +2,8 @@ import os
 import pandas as pd
 import time
 import discord
-
+import pytz
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 from riotwatcher import LolWatcher, ApiError
 
@@ -144,17 +145,15 @@ def printlastmatch(ign):
         mode = 'featured'
 
     # Create embed
-    datetime = time.strftime(
-        '%A, %B %-d', time.localtime(match_detail['gameCreation']))
+    dt = datetime.fromtimestamp(
+        match_detail['gameCreation']/1000,  pytz.timezone("Australia/Melbourne"))
 
+    dt = dt.strftime('%A, at %-H:%-M%P on %B %-d')
     data = '```' + str(pd.DataFrame(participants)) + '```'
-    msg = f"{player['name']} **{'won' if hasWon else 'lost'}** their last {mode} game on {datetime}.\n"
+    msg = f"{player['name']} **{'won' if hasWon else 'lost'}** their last {mode} game on {dt}.\n"
 
     embedVar = discord.Embed(
         title=f"{player['name']}'s last match", description=msg, color=0xffdb58)
     embedVar.add_field(name="Match Data", value=data, inline=False)
 
     return embedVar
-
-
-# print(printlastmatch('TheHotDogThing'))
