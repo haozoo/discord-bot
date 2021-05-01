@@ -148,10 +148,9 @@ def printlastmatch(ign):
     dt = datetime.fromtimestamp(
         match_detail['gameCreation']/1000,  pytz.timezone("Australia/Melbourne"))
 
-    dt = dt.strftime('%A, at %-H:%-M%P on %B %-d')
+    dt = dt.strftime('%A, at %-I:%-M%P on %B %-d')
     data = '```' + str(pd.DataFrame(participants)) + '```'
     msg = f"{player['name']} **{'won' if hasWon else 'lost'}** their last {mode} game on {dt}.\n"
-
     embedVar = discord.Embed(
         title=f"{player['name']}'s last match", description=msg, color=0xffdb58)
     embedVar.add_field(name="Match Data", value=data, inline=False)
