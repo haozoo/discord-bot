@@ -125,6 +125,7 @@ def printlastmatch(ign):
                                                            1]['player']['summonerName']
         if(PlayerName == ign and row['stats']['win'] == True):
             hasWon = 1
+
         participants_row['Player'] = PlayerName
         participants_row['Champion'] = champ_dict[str(row['championId'])]
         participants_row['Level'] = row['stats']['champLevel']
@@ -150,7 +151,8 @@ def printlastmatch(ign):
 
     dt = dt.strftime('%A, at %-I:%-M%P on %B %-d')
     data = '```' + str(pd.DataFrame(participants)) + '```'
-    msg = f"{player['name']} **{'won' if hasWon else 'lost'}** their last {mode} game on {dt}.\n"
+    win = 'won' if hasWon else 'lost'
+    msg = f"{player['name']} **{win}** their last {mode} game on {dt}.\n"
     embedVar = discord.Embed(
         title=f"{player['name']}'s last match", description=msg, color=0xffdb58)
     embedVar.add_field(name="Match Data", value=data, inline=False)
