@@ -118,13 +118,13 @@ def printlastmatch(ign):
     # Processing data into 2D array
     print('Processing Data...')
     participants = []
-    hasWon = 0
+    hasWon = False
     for row in match_detail['participants']:
         participants_row = {}
         PlayerName = match_detail['participantIdentities'][row['participantId'] -
                                                            1]['player']['summonerName']
-        if(PlayerName == ign and row['stats']['win'] == True):
-            hasWon = 1
+        if(str(PlayerName).lower() == ign.lower() and row['stats']['win'] == True):
+            hasWon = True
 
         participants_row['Player'] = PlayerName
         participants_row['Champion'] = champ_dict[str(row['championId'])]
@@ -149,7 +149,7 @@ def printlastmatch(ign):
     dt = datetime.fromtimestamp(
         match_detail['gameCreation']/1000,  pytz.timezone("Australia/Melbourne"))
 
-    dt = dt.strftime('%A, at %-I:%-M%P on %B %-d')
+    dt = dt.strftime('%A, at %-I:%M%P on %B %-d')
     data = '```' + str(pd.DataFrame(participants)) + '```'
     win = 'won' if hasWon else 'lost'
     msg = f"{player['name']} **{win}** their last {mode} game on {dt}.\n"
